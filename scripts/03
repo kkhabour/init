@@ -1,0 +1,69 @@
+#!/bin/bash
+
+# Author: kkhabour
+# Copyright (c) 1337.ma
+# Script follows: tolower toupper
+
+Usage() {
+	echo "$0 rename all files or directories to lower or upper case
+	usage: $0 [f/d/fd] [lower/upper] [directory]"
+	exit 1
+}
+
+# Check number of argument
+[ $# -lt 1 ] || [ $# -gt 4 ] && Usage
+
+# Check if directory exists
+[ ! -d $3 ] && echo "Directory $3 does not exists." && exit 1
+
+# Change dir to files path
+cd $3
+
+# Check if files or directories or both
+if [ $1 == "f" ]
+then
+	FILES=$(find * -type f)
+elif [ $1 == "d" ]
+then
+	FILES=$(find * -type d)
+elif [ $1 == "fd" ]
+then
+	FILES=$(ls)
+else
+	Usage
+fi
+
+# Change 2end argument to lower
+CASE=`echo $2 | tr '[A-Z]' '[a-z]'`
+
+# Check case if lower
+if [ $CASE == "lower" ]
+then
+	# Loop through dir and set file or dir names to lower
+	for i in $FILES
+	do
+		LOWER=`echo $i | tr '[A-Z]' '[a-z]'`
+		if [ $i == $LOWER ]
+		then
+			# name is already in lower case
+			continue
+		fi
+		mv $i $LOWER
+	done
+# Check case if upper
+elif [ $CASE == "upper" ]
+then
+	# Loop through dir and set file or dir names to upper
+	for i in $FILES
+	do
+		UPPER=`echo $i | tr '[a-z]' '[A-Z]'`
+		if [ $i == $UPPER ]
+		then
+			# name is already in upper case
+			continue
+		fi
+		mv $i $UPPER
+	done
+else
+	Usage
+fi
